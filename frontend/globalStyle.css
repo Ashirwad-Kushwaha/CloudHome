@@ -104,84 +104,164 @@
 }
 
 .homepage-main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border: 1px solid gray;
-    border-radius: 5px;
-    background-color: white;
     width: 100%;
-    height: calc(100vh - 60px);
-    font-size: 20px;
+    padding: 20px;
 
-    button{
-        margin: 5px;
+    .buttons {
+        margin-bottom: 20px;
 
-        width: 300px;
-        height: 40px;
-        font-size: 20px;        
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        padding: 10px;
-    }
-
-    .create-folder{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        border: 1px solid gray;
-        border-radius: 5px;
-        background-color: white;
-        width: 100%;
-
-        input{
-            width: 300px;
-            height: 40px;
-            font-size: 20px;
-            border-radius: 5px;
-            border: 1px solid gray;
-            padding-left: 10px;
+        .file-create {
+            margin-right: 10px;
         }
     }
-    
 
-    .get-file-folders{
+    .folder-list {
         display: flex;
-        flex-wrap: wrap;
-        margin: 10px;
-        /* padding: 20px; */
-        border: 1px solid gray;
-        border-radius: 5px;
-        background-color: white;
-        width: 99vw;
-        height: calc(100vh - 60px);
-        font-size: 20px;
+        padding: 24px;
+        gap: 24px;
+    }
 
-        .file-folder{
-            display: flex;
-            margin: 10px;
-            padding: 20px;
-            overflow: hidden;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid gray;
-            border-radius: 5px;
-            background-color: white;
-            width: 200px;
-            height: 30px;
-            font-size: 20px;
+    .create-folder-container {
+        margin-top: 20px;
 
-            p{
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                height: 100%;
+        .create-folder {
+            input {
+                margin-right: 10px;
+            }
+
+            .yes-no {
+                margin-right: 5px;
             }
         }
+    }
 
+    .get-file-folders {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding: 16px;
+
+        .file-folder {
+            width: 150px;
+            /* Default width */
+            position: relative;
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+
+            &:hover {
+                background-color: #f0f0f0;
+            }
+
+            &.expanded {
+                width: auto;
+                /* Expand to fit content */
+                min-width: 200px;
+                /* Ensure it does not shrink below this width */
+                padding: 12px 12px 40px;
+                /* Extra padding at the bottom to fit the rename input and button */
+            }
+
+            .file-folder-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: relative;
+
+                .file-name {
+                    margin: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    flex: 1;
+                }
+
+                .options-icon {
+                    cursor: pointer;
+                    margin-left: 10px;
+                }
+
+                .rename-input {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    background-color: #f9f9f9;
+                    border-radius: 4px;
+                    position: absolute;
+                    bottom: 12px;
+                    /* Positioned at the bottom of the .file-folder */
+                    left: 12px;
+                    right: 12px;
+                    transform: translateY(100%);
+                    /* Start off-screen */
+                    opacity: 0;
+                    transition: all 0.3s ease;
+
+                    &.visible {
+                        transform: translateY(0);
+                        /* Slide into view */
+                        opacity: 1;
+                    }
+
+                    input {
+                        flex-grow: 1;
+                        padding: 4px;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                    }
+
+                    button {
+                        padding: 4px 8px;
+                        border: none;
+                        background-color: #007bff;
+                        color: #fff;
+                        border-radius: 4px;
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: #0056b3;
+                        }
+                    }
+                }
+            }
+
+            .options-menu {
+                position: absolute;
+                right: 10px;
+                top: 100%;
+                /* Adjusted to display below the file-folder */
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 8px;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                width: 120px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
+                button {
+                    border: none;
+                    background-color: #fff;
+                    cursor: pointer;
+                    padding: 8px;
+                    text-align: left;
+                    border-radius: 4px;
+                    transition: background-color 0.2s;
+
+                    &:hover {
+                        background-color: #f1f1f1;
+                    }
+                }
+            }
+        }
     }
 }
