@@ -30,7 +30,7 @@ const verifyToken = (req, res, next) =>{
             return;
         }
         else{
-            console.log("---->", decoded);
+            // console.log("---->", decoded);
             req.user = { email: decoded.data.email, _id: decoded.data.id };
             next();
         }

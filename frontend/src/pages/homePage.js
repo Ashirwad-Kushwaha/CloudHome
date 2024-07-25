@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Navbar from '../components/navbar';
 import useCreateFolder from '../hooks/useCreateFolder';
 import useGetFileFolders from '../hooks/useGetFileFolders';
 import useUploadFile from '../hooks/useUploadFile';
 import { FaFolderOpen } from "react-icons/fa6";
 import { SlOptionsVertical } from "react-icons/sl";
+import { MdEdit } from "react-icons/md";
+import { resetSearch } from '../store/slices/searchSlice';
 
 const HomePage = () => {
+  const dispatch = useDispatch();
   const [newFolder, setNewFolder] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [newName, setNewName] = useState("");
@@ -14,9 +18,10 @@ const HomePage = () => {
   const [optionsVisible, setOptionsVisible] = useState(null);
   const inputRef = useRef(null);
   const { createFolder } = useCreateFolder();
-  const { getFileFolders, fileFolders, renameItem, deleteItem } = useGetFileFolders(); // Assume deleteFileOrFolder is available
+  const { getFileFolders, fileFolders, renameItem, deleteItem } = useGetFileFolders();
   const { isUploadAllowed, uploadFile } = useUploadFile();
-  const [folderStructure, setFoldersStructure] = useState([{ _id: null }]);
+  const [folderStructure, setFoldersStructure] = useState([{ _id: null, name: "Home" }]);
+  const { results } = useSelector((state) => state.search);
 
   const parentFolder = folderStructure[folderStructure.length - 1];
 
@@ -45,8 +50,9 @@ const HomePage = () => {
   };
 
   const handleBackClick = (clickIdx) => {
-    const newFolderStructure = folderStructure.filter((_, idx) => idx <= clickIdx);
+    const newFolderStructure = folderStructure.slice(0, clickIdx + 1);
     setFoldersStructure(newFolderStructure);
+    dispatch(resetSearch());
   };
 
   const handleFileUpload = async (e) => {
@@ -73,7 +79,7 @@ const HomePage = () => {
 
   const handleRenameSubmit = async () => {
     if (newName.length > 0) {
-      await renameItem(editingId, newName); // Assume updateFileOrFolderName is available
+      await renameItem(editingId, newName);
       getFileFolders(parentFolder._id);
       setEditingId(null);
       setNewName("");
@@ -90,22 +96,16 @@ const HomePage = () => {
     getFileFolders(parentFolder._id);
   }, [parentFolder]);
 
+  const displayedItems = results.length > 0 ? results : fileFolders;
+
   return (
     <>
-      <Navbar />
+      <Navbar items={fileFolders} />
       <div className="homepage-main-container">
         <div className="buttons">
           <button onClick={handleAllowCreateFolder} className='file-create'>Create Folder</button>
           <input className="file-create" ref={inputRef} type="file" onChange={handleFileUpload} />
         </div>
-
-        <ul className="folder-list">
-          {folderStructure.map((elem, idx) => (
-            <li key={idx} onClick={() => handleBackClick(idx)}>
-              {elem.name}
-            </li>
-          ))}
-        </ul>
 
         <div className="create-folder-container">
           {showCreateFolder && (
@@ -117,8 +117,19 @@ const HomePage = () => {
           )}
         </div>
 
+        <ul className="folder-list">
+          {folderStructure.map((elem, idx) => (
+            <>
+            <li key={idx} onClick={() => handleBackClick(idx)}>
+            {elem.name} 
+            </li>
+            <p>/</p>
+            </>
+          ))}
+        </ul>
+
         <div className="get-file-folders">
-          {fileFolders.map((elem) => (
+          {displayedItems.map((elem) => (
             <div
               key={elem._id}
               className={`file-folder ${editingId === elem._id ? "expanded" : ""}`}
@@ -140,13 +151,13 @@ const HomePage = () => {
                 ) : (
                   <p className="file-name">{elem.name}</p>
                 )}
-                <SlOptionsVertical
+                <MdEdit
                   className="options-icon"
                   onClick={() => handleOptions(elem._id)}
                 />
               </div>
               {optionsVisible === elem._id && (
-                <div className="options-menu">
+                <div className="options-menu visible">
                   <button onClick={() => handleRename(elem._id)}>Rename</button>
                   <button onClick={() => handleDelete(elem._id)}>Delete</button>
                 </div>

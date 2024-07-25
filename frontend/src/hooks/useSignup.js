@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 const useSignup = () => {
     const navigate = useNavigate();
 
-    const signup = async ({email, password}) => {
+    const signup = async ({name, email, password}) => {
         try{
             const res = await fetch(`${process.env.BACKEND_URL}/api/v1/auth/signup`, {
                 method: "POST",
-                body: JSON.stringify({email, password}),
+                body: JSON.stringify({name, email, password}),
                 headers:{
                     "content-Type": "application/json",
                 },
