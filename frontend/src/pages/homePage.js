@@ -19,6 +19,7 @@ const HomePage = () => {
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [optionsVisible, setOptionsVisible] = useState(null);
   const inputRef = useRef(null);
+  const containerRef = useRef(null);
   const { createFolder } = useCreateFolder();
   const { getFileFolders, fileFolders, renameItem, deleteItem } = useGetFileFolders();
   const { isUploadAllowed, uploadFile } = useUploadFile();
@@ -31,7 +32,6 @@ const HomePage = () => {
 
   const handleDoubleClick = (elem) => {
     dispatch(resetSearch());
-    console.log("results", results)
     if (elem.type === "folder") {
       setFoldersStructure([...folderStructure, elem]);
     } else {
@@ -73,7 +73,7 @@ const HomePage = () => {
 
   const handleOptions = (id) => {
     setOptionsVisible((prev) => (prev === id ? null : id));
-    selectedId === id ? setSelectedId(null) : setSelectedId(id);
+    setSelectedId(id);
   };
 
   const handleRename = (id) => {
@@ -90,6 +90,7 @@ const HomePage = () => {
       getFileFolders(parentFolder._id);
       setEditingId(null);
       setNewName("");
+      setOptionsVisible(null);
     }
   };
 
@@ -101,7 +102,21 @@ const HomePage = () => {
 
   const handleShare = async () => {
     setModalOpen(true);
-  }
+    setOptionsVisible(null);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setOptionsVisible(null);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     getFileFolders(parentFolder._id);
@@ -112,7 +127,7 @@ const HomePage = () => {
   return (
     <>
       <Navbar items={fileFolders} />
-      <div className="homepage-main-container">
+      <div className="homepage-main-container" ref={containerRef}>
         <div className="buttons">
           <button onClick={handleAllowCreateFolder} className='file-create'>Create Folder</button>
           <input className="file-create" ref={inputRef} type="file" onChange={handleFileUpload} />
@@ -164,7 +179,10 @@ const HomePage = () => {
                 )}
                 <MdEdit
                   className="options-icon"
-                  onClick={() => handleOptions(elem._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOptions(elem._id);
+                  }}
                 />
               </div>
               {optionsVisible === elem._id && (
@@ -178,7 +196,6 @@ const HomePage = () => {
           ))}
         </div>
         <EmailModal id={selectedId} isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
-
       </div>
     </>
   );

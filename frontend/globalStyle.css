@@ -37,6 +37,7 @@
 
         .input-label {
             display: flex;
+            flex-wrap: wrap;
             /* flex-direction: column; */
             /* gap: 10px; */
             align-items: center;
@@ -187,6 +188,7 @@
         list-style-type: none;
         padding: 0;
         display: flex;
+        flex-wrap: wrap;
         height: 30px;
         gap: 5px;
         margin-bottom: 20px;
@@ -244,6 +246,7 @@
         /* Fixed width */
         height: 40px;
         /* Fixed height */
+        flex-grow: 1;
         padding: 10px;
         background-color: #f8f8f8;
         border-radius: 5px;

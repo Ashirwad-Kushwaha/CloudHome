@@ -1,8 +1,7 @@
-import toast from "react-hot-toast";
 import React, { useEffect, useState } from 'react';
 import './style.css';
 import useShareEmail from '../../hooks/useShareEmail';
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 function EmailModal({ id, isOpen, onClose }) {
     const [email, setEmail] = useState('');
@@ -12,12 +11,12 @@ function EmailModal({ id, isOpen, onClose }) {
     const { shareFileFolder } = useShareEmail();
 
     useEffect(() => {
-        setUser(JSON.parse(localStorage.getItem('userInfo')))
-    }, [])
+        setUser(JSON.parse(localStorage.getItem('userInfo')));
+    }, []);
 
     const addEmail = () => {
-        if (user.user.email == email) {
-            toast.error('You can not share with yourself');
+        if (user.user.email === email) {
+            toast.error('You cannot share with yourself');
             setEmail('');
             return;
         }
@@ -34,6 +33,8 @@ function EmailModal({ id, isOpen, onClose }) {
     const handleShare = () => {
         if (emails.length > 0) {
             shareFileFolder({ id, emails });
+            onClose(); // Close the modal
+            toast.success('Shared successfully!');
         }
     };
 
