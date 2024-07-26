@@ -2,6 +2,7 @@ import "../../globalStyle.css";
 import { useState } from "react";
 import useSignup from "../hooks/useSignup";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const SignupPage = () => {
 
@@ -17,7 +18,7 @@ const SignupPage = () => {
     if (validation) {
       signup({ name, email, password });
     } else {
-      alert("Validation failed");
+      toast.error("Validation failed");
     }
   };
 

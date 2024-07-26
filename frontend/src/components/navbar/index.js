@@ -4,6 +4,7 @@ import "./style.css";
 import { appLogout } from "../../store/slices/authSlice";
 import { setSearchTerm, setResults } from "../../store/slices/searchSlice";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Navbar = ({ items = [] }) => {
   const dispatch = useDispatch();
@@ -23,15 +24,18 @@ const Navbar = ({ items = [] }) => {
     const searchResults = items.filter((item) =>
       item.name.toLowerCase().includes(inputValue.toLowerCase())
     );
+    if (searchResults.length === 0) {
+      toast.error("No results found");
+    }
     dispatch(setResults(searchResults));
   };
 
   return (
     <div className="navbar-container">
       <div className="navbar-left-items">
-      <Link to="/login" className="navbar-logo">
-        <h2>Cloud Home</h2>
-      </Link>
+        <Link to="/login" className="navbar-logo">
+          <h2>Cloud Home</h2>
+        </Link>
       </div>
       <div className="search-container">
         <input

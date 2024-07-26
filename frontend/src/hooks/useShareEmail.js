@@ -1,17 +1,17 @@
-import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
-const useCreateFolder = () => {
+const useShareEmail = () => {
 
     const { token } = useSelector((e) => e.auth);
 
 
-    const createFolder = async ({ name, parentId }) => {
+    const shareFileFolder = async ({ id, emails }) => {
         try {
-
-            const res = await fetch(`${process.env.BACKEND_URL}/api/v1/folder/create`, {
+            console.log(id, emails)
+            const res = await fetch(`${process.env.BACKEND_URL}/api/v1/file-folder/share`, {
                 method: "POST",
-                body: JSON.stringify({ name, parentId }),
+                body: JSON.stringify({ id, data: emails }),
                 headers: {
                     "content-Type": "application/json",
                     authorization: "Bearer " + token,
@@ -20,14 +20,14 @@ const useCreateFolder = () => {
 
             const data = await res.json();
             console.log(data);
-            toast.error(data.message);
+            alert(data.message);
         }
         catch (e) {
             console.log(e.message);
-            toast.error("Error: " + e.message);
+            alert("Error: " + e.message);
         }
     }
-    return { createFolder };
+    return { shareFileFolder };
 };
 
-export default useCreateFolder;
+export default useShareEmail;

@@ -8,6 +8,8 @@ import { FaFolderOpen } from "react-icons/fa6";
 import { SlOptionsVertical } from "react-icons/sl";
 import { MdEdit } from "react-icons/md";
 import { resetSearch } from '../store/slices/searchSlice';
+import EmailModal from '../components/EmailModal';
+import toast from "react-hot-toast";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -22,10 +24,14 @@ const HomePage = () => {
   const { isUploadAllowed, uploadFile } = useUploadFile();
   const [folderStructure, setFoldersStructure] = useState([{ _id: null, name: "Home" }]);
   const { results } = useSelector((state) => state.search);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   const parentFolder = folderStructure[folderStructure.length - 1];
 
   const handleDoubleClick = (elem) => {
+    dispatch(resetSearch());
+    console.log("results", results)
     if (elem.type === "folder") {
       setFoldersStructure([...folderStructure, elem]);
     } else {
@@ -61,12 +67,13 @@ const HomePage = () => {
       await uploadFile({ file: file[0], parentId: parentFolder._id });
       getFileFolders(parentFolder._id);
     } else {
-      alert("Upload is already in progress. Please wait...");
+      toast.error("Upload is already in progress. Please wait...");
     }
   };
 
   const handleOptions = (id) => {
     setOptionsVisible((prev) => (prev === id ? null : id));
+    selectedId === id ? setSelectedId(null) : setSelectedId(id);
   };
 
   const handleRename = (id) => {
@@ -91,6 +98,10 @@ const HomePage = () => {
     getFileFolders(parentFolder._id);
     setOptionsVisible(null);
   };
+
+  const handleShare = async () => {
+    setModalOpen(true);
+  }
 
   useEffect(() => {
     getFileFolders(parentFolder._id);
@@ -120,10 +131,10 @@ const HomePage = () => {
         <ul className="folder-list">
           {folderStructure.map((elem, idx) => (
             <>
-            <li key={idx} onClick={() => handleBackClick(idx)}>
-            {elem.name} 
-            </li>
-            <p>/</p>
+              <li key={idx} onClick={() => handleBackClick(idx)}>
+                {elem.name}
+              </li>
+              <p>/</p>
             </>
           ))}
         </ul>
@@ -160,11 +171,14 @@ const HomePage = () => {
                 <div className="options-menu visible">
                   <button onClick={() => handleRename(elem._id)}>Rename</button>
                   <button onClick={() => handleDelete(elem._id)}>Delete</button>
+                  <button onClick={() => handleShare(elem._id)}>Share</button>
                 </div>
               )}
             </div>
           ))}
         </div>
+        <EmailModal id={selectedId} isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+
       </div>
     </>
   );

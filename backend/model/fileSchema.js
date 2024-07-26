@@ -14,7 +14,7 @@ const fileFolderSchema = mongoose.Schema({
     },
     sharedWith: [
         {
-            type: ObjectId,
+            type: String,
             ref: "Users"
         }
     ],
