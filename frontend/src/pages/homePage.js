@@ -127,7 +127,7 @@ const HomePage = () => {
   return (
     <>
       <Navbar items={fileFolders} />
-      <div className="homepage-main-container" ref={containerRef}>
+      <div className="homepage-main-container" ref={containerRef}>     
         <div className="buttons">
           <button onClick={handleAllowCreateFolder} className='file-create'>Create Folder</button>
           <input className="file-create" ref={inputRef} type="file" onChange={handleFileUpload} />

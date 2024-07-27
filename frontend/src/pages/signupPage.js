@@ -24,6 +24,9 @@ const SignupPage = () => {
 
   return (
     <div className="auth-page-container">
+      <div className="logo">
+        <img src="https://res.cloudinary.com/dxecoctrm/image/upload/v1722061689/lyexexmxju7l5sk6ghvu.png" alt="logo" />
+      </div>
       <div className="auth-page">
         <h1>Signup</h1>
         <div className="input-label">
