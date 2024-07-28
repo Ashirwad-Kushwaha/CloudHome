@@ -50,7 +50,7 @@ const signUp = async (req, res) => {
                 user: {
                     id: newUser._id,
                     email: newUser.email,
-                    isVerified: newUser.isEmailVerified,
+                    isEmailVerified: newUser.isEmailVerified,
                 }
             },
         })
@@ -109,7 +109,7 @@ const login = async (req, res) => {
                 user: {
                     id: user._id,
                     email: user.email,
-                    isVerified: user.isEmailVerified,
+                    isEmailVerified: user.isEmailVerified,
                 },
                 token: generateJWTtoken({ id: user._id, email: user.email }),
             },

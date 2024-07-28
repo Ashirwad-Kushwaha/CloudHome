@@ -29,7 +29,6 @@ const authSlice = createSlice({
             state.email = null;
             state.name = null;
             state.token = null;
-            state.isEmailVerified = false;
             localStorage.removeItem("userInfo");
         },
         emailVerified: (state) => {

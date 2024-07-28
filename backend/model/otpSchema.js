@@ -17,7 +17,7 @@ const otpSchema = new mongoose.Schema({
         required: true,
         ref: "Users",
     },
-    isVerified:{
+    isEmailVerified:{
         type: Boolean,
         default: false
     }
