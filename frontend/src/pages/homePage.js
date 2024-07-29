@@ -23,17 +23,21 @@ const HomePage = () => {
   const { createFolder } = useCreateFolder();
   const { getFileFolders, fileFolders, renameItem, deleteItem } = useGetFileFolders();
   const { isUploadAllowed, uploadFile } = useUploadFile();
-  const [folderStructure, setFoldersStructure] = useState([{ _id: null, name: "Home" }]);
   const { results } = useSelector((state) => state.search);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+
+  const storedFolderStructure = JSON.parse(localStorage.getItem('folderStructure')) || [{ _id: null, name: "Home" }];
+  const [folderStructure, setFoldersStructure] = useState(storedFolderStructure);
 
   const parentFolder = folderStructure[folderStructure.length - 1];
 
   const handleDoubleClick = (elem) => {
     dispatch(resetSearch());
     if (elem.type === "folder") {
-      setFoldersStructure([...folderStructure, elem]);
+      const updatedStructure = [...folderStructure, elem];
+      setFoldersStructure(updatedStructure);
+      localStorage.setItem('folderStructure', JSON.stringify(updatedStructure));
     } else {
       window.open(elem.link, '_blank');
     }
@@ -58,6 +62,7 @@ const HomePage = () => {
   const handleBackClick = (clickIdx) => {
     const newFolderStructure = folderStructure.slice(0, clickIdx + 1);
     setFoldersStructure(newFolderStructure);
+    localStorage.setItem('folderStructure', JSON.stringify(newFolderStructure));
     dispatch(resetSearch());
   };
 
@@ -127,7 +132,7 @@ const HomePage = () => {
   return (
     <>
       <Navbar items={fileFolders} />
-      <div className="homepage-main-container" ref={containerRef}>     
+      <div className="homepage-main-container" ref={containerRef}>
         <div className="buttons">
           <button onClick={handleAllowCreateFolder} className='file-create'>Create Folder</button>
           <input className="file-create" ref={inputRef} type="file" onChange={handleFileUpload} />
